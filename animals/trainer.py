@@ -1,5 +1,4 @@
-
-
+import torch
 
 class Trainer():
 
@@ -9,11 +8,22 @@ class Trainer():
         self.optimizer = optimizer
         self.dataset = dataset
         
-    def train(self, epochs, verbose=-1):
+    def train(self, epochs=50, batch_size=64, verbose=-1):
         
+        dataloader = torch.utils.data.DataLoader(self.dataset, batch_size=batch_size, shuffle=True)
+
         for e in range(epochs):
-            epoch = e + 1
 
             running_loss = 0
 
-            for images, labels in 
+            for images, labels in dataloader:
+                self.optimizer.zero_grad()
+
+                output = self.model.forward(images)
+
+                loss = criterion(output, labels)
+                loss.backward()
+
+                self.optimizer.step()
+
+                running_loss += loss.item()
