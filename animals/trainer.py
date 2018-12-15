@@ -1,4 +1,6 @@
 import torch
+from torch.autograd import Variable
+
 
 class Trainer():
 
@@ -29,7 +31,7 @@ class Trainer():
 
                 self.optimizer.zero_grad()
 
-                output = self.model.forward(images)
+                output = self.model.forward(Variable(images))
 
                 loss = self.criterion(output, labels)
                 loss.backward()

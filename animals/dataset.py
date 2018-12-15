@@ -1,6 +1,8 @@
 from torch.utils.data.dataset import Dataset
 import os
 from PIL import Image
+import torch
+import numpy as np
 
 class AnimalsDataset(Dataset):
 
@@ -15,6 +17,12 @@ class AnimalsDataset(Dataset):
         chosen_file = all_files[index] 
         
         label = chosen_file.split(".")[0]
+        if label == "cat":
+            label = [0, 1]
+        elif label == "dog":
+            label = [1, 0]
+
+        label = torch.from_numpy(np.array(label))
 
         image = Image.open(self.filepath + "/" + chosen_file)
 
