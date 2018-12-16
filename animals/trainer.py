@@ -21,18 +21,24 @@ class Trainer():
 
         for e in range(epochs):
 
+            self.model.train()
+
             running_loss = 0
             batch_num = 0
 
             for images, labels in dataloader:
+                # print("labels", labels, labels.size())
                 if torch.cuda.is_available():
                     images = images.cuda()
                     labels = labels.cuda()
 
                 self.optimizer.zero_grad()
 
-                output = self.model.forward(Variable(images))
-
+                # output = self.model.forward(Variable(images))
+                output = self.model.forward(images)
+                # print("max", torch.max(labels, 1))
+                # print("labels", labels)
+                # loss = self.criterion(output, labels.squeeze_())
                 loss = self.criterion(output, labels)
                 loss.backward()
 
@@ -46,6 +52,9 @@ class Trainer():
                 batch_num += 1
 
             else:
+
+                self.model.eval()
+
                 test_loss = 0
                 accuracy = 0
 
@@ -64,6 +73,6 @@ class Trainer():
                         equals = top_class == labels.view(*top_class.shape)
                         accuracy += torch.mean(equals.type(torch.FloatTensor))
 
-                print(f'=========================== END EPOCH {e} ===========================')
+                print(f'=========================== END EPOCH {e + 1} ===========================')
                 print(f'Training Loss: {running_loss/len(dataloader)}\tTest Loss: {test_loss/len(test_dataloader)}\tAccuracy: {accuracy/len(test_dataloader) * 100}%')
                 print(f'=====================================================================')
