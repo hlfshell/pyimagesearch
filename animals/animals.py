@@ -31,4 +31,4 @@ trainer = Trainer(model, train_dataset, test_dataset, criterion, optimizer)
 
 print("Starting training")
 
-trainer.train(verbose=25)
+trainer.train(batch_size=1, verbose=25)
